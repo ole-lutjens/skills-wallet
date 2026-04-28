@@ -1,0 +1,1600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skills Wallet — Prototype</title>
+  <!-- Phosphor Icons (Widget DS) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/bold/style.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/fill/style.css"/>
+  <style>
+
+    /* ============================================================
+       Widget DS — CSS Custom Properties (light mode)
+       ============================================================ */
+    :root {
+      --ui-bg:             #d6d6d9;
+      --ui-bg-raised:      #ffffff;
+      --ui-surface:        #ffffff;
+      --ui-surface-2:      #f7f8fa;
+      --ui-border:         #e3e5ea;
+      --ui-border-strong:  #c4c7cf;
+      --ui-text-primary:   #1c1d1f;
+      --ui-text-secondary: #6b7280;
+      --ui-text-tertiary:  #9ca3af;
+      --ui-text-inverse:   #ffffff;
+      --ui-accent:         #5624d0;
+      --ui-accent-hover:   #4413b8;
+      --ui-accent-muted:   #ede9fb;
+      --ui-accent-2:       #f26722;
+      --ui-success:        #16a34a;
+      --ui-success-muted:  #dcfce7;
+      --ui-warning:        #d97706;
+      --ui-warning-muted:  #fef3c7;
+      --ui-error:          #dc2626;
+      --ui-error-muted:    #fee2e2;
+
+      /* Card gradients */
+      --card-pro-a:        #0056D2;
+      --card-pro-b:        #1a6ff5;
+      --card-per-a:        #5624d0;
+      --card-per-b:        #a435f0;
+      --card-cert-a:       #0c4a6e;
+      --card-cert-b:       #0369a1;
+
+      /* Button tokens */
+      --btn-primary-bg:    #5624d0;
+      --btn-primary-fg:    #ffffff;
+      --btn-primary-hover: #4413b8;
+      --btn-brand-bg:      #f26722;
+      --btn-brand-fg:      #ffffff;
+      --btn-outline-bd:    #5624d0;
+      --btn-outline-fg:    #5624d0;
+      --btn-ghost-fg:      #6b7280;
+      --btn-ghost-bg:      #f7f8fa;
+
+      /* Badge tokens */
+      --badge-correct-bg:  #dcfce7;
+      --badge-correct-fg:  #15803d;
+      --badge-error-bg:    #fee2e2;
+      --badge-error-fg:    #dc2626;
+
+      /* Misc */
+      --radius-card:  16px;
+      --shadow-card:  0 2px 16px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-modal: 0 -8px 40px rgba(0,0,0,0.14);
+      --dur:          200ms;
+      --ease:         cubic-bezier(0.4,0,0.2,1);
+    }
+
+    [data-theme="dark"] {
+      --ui-bg:             #111213;
+      --ui-bg-raised:      #1c1d1f;
+      --ui-surface:        #1c1d1f;
+      --ui-surface-2:      #2d2f31;
+      --ui-border:         #3e4143;
+      --ui-border-strong:  #5a5d62;
+      --ui-text-primary:   #f7f8fa;
+      --ui-text-secondary: #9ca3af;
+      --ui-text-tertiary:  #6b7280;
+      --ui-text-inverse:   #1c1d1f;
+      --ui-accent:         #a78bfa;
+      --ui-accent-hover:   #c4b5fd;
+      --ui-accent-muted:   #2e1f6b;
+      --ui-accent-2:       #fb923c;
+      --ui-success:        #4ade80;
+      --ui-success-muted:  #14532d;
+      --ui-warning:        #fbbf24;
+      --ui-warning-muted:  #451a03;
+      --ui-error:          #f87171;
+      --ui-error-muted:    #450a0a;
+
+      --btn-primary-bg:    #a78bfa;
+      --btn-primary-fg:    #1c1d1f;
+      --btn-primary-hover: #c4b5fd;
+      --btn-brand-bg:      #fb923c;
+      --btn-brand-fg:      #1c1d1f;
+      --btn-outline-bd:    #a78bfa;
+      --btn-outline-fg:    #a78bfa;
+      --btn-ghost-fg:      #9ca3af;
+      --btn-ghost-bg:      #2d2f31;
+
+      --badge-correct-bg:  #14532d;
+      --badge-correct-fg:  #4ade80;
+      --badge-error-bg:    #450a0a;
+      --badge-error-fg:    #f87171;
+
+      --shadow-card:  0 2px 16px rgba(0,0,0,0.35), 0 1px 3px rgba(0,0,0,0.25);
+      --shadow-modal: 0 -8px 40px rgba(0,0,0,0.5);
+    }
+
+    /* ============================================================
+       Page shell
+       ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #2e2e2e;
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ============================================================
+       Phone frame
+       ============================================================ */
+    .phone {
+      width: 390px;
+      height: 844px;
+      background: var(--ui-bg);
+      border-radius: 52px;
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,0.12),
+        0 0 0 10px #1a1a1a,
+        0 32px 80px rgba(0,0,0,0.35);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      transition: background var(--dur) var(--ease);
+    }
+
+    /* Dynamic island */
+    .island {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 34px;
+      background: #000;
+      border-radius: 20px;
+      z-index: 200;
+      pointer-events: none;
+    }
+
+    /* Status bar */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 28px 2px;
+      flex-shrink: 0;
+    }
+    .status-time {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ui-text-primary);
+    }
+    .status-icons {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--ui-text-primary);
+      font-size: 15px;
+    }
+
+    /* Scrollable content */
+    .screen {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      scrollbar-width: none;
+    }
+    .screen::-webkit-scrollbar { display: none; }
+
+    /* ============================================================
+       App header
+       ============================================================ */
+    .app-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px 14px;
+      flex-shrink: 0;
+    }
+    .header-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--ui-surface);
+      border: 1px solid var(--ui-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--ui-text-primary);
+      font-size: 17px;
+      flex-shrink: 0;
+      transition: background var(--dur);
+    }
+    .header-btn:active { background: var(--ui-surface-2); }
+    .header-title {
+      flex: 1;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--ui-text-primary);
+      letter-spacing: -0.01em;
+    }
+    .header-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #5624d0, #a78bfa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      flex-shrink: 0;
+      cursor: pointer;
+      box-shadow: 0 0 0 2px var(--ui-bg), 0 0 0 4px #5624d0;
+    }
+
+    /* ============================================================
+       Wallet stats strip
+       ============================================================ */
+    .stats-strip {
+      display: flex;
+      gap: 8px;
+      padding: 0 20px 18px;
+    }
+    .stat-chip {
+      flex: 1;
+      background: var(--ui-surface);
+      border: 1px solid var(--ui-border);
+      border-radius: 14px;
+      padding: 11px 12px;
+      box-shadow: var(--shadow-card);
+    }
+    .stat-value {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--ui-text-primary);
+      line-height: 1;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: baseline;
+      gap: 3px;
+    }
+    .stat-value-suffix {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ui-accent);
+    }
+    .stat-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--ui-text-secondary);
+    }
+
+    /* ============================================================
+       Section header + pagination
+       ============================================================ */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px 12px;
+    }
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ui-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+    }
+    .dots {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+    .dot {
+      height: 6px;
+      width: 6px;
+      border-radius: 99px;
+      background: var(--ui-border-strong);
+      cursor: pointer;
+      transition: all 300ms var(--ease);
+    }
+    .dot.active {
+      width: 20px;
+      background: var(--ui-accent);
+    }
+    .carousel-dots-below {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 6px 0 16px;
+    }
+
+    /* ============================================================
+       Card carousel
+       ============================================================ */
+    .carousel-wrap {
+      overflow: hidden;
+      padding: 0 0 0 20px;
+      flex: 1;
+      min-height: 0;
+    }
+    .carousel {
+      display: flex;
+      gap: 12px;
+      transition: transform 380ms var(--ease);
+      will-change: transform;
+      cursor: grab;
+      width: 100%;
+      height: 100%;
+    }
+    .carousel:active { cursor: grabbing; }
+
+    .skill-card {
+      flex: 0 0 calc(100% - 30px);
+      min-width: 0;
+      border-radius: var(--radius-card);
+      background: var(--ui-surface);
+      box-shadow: var(--shadow-card);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Card banner */
+    .card-banner {
+      padding: 18px 20px 16px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-banner.pro {
+      background: linear-gradient(135deg, var(--card-pro-a) 0%, var(--card-pro-b) 100%);
+    }
+    .card-banner.per {
+      background: linear-gradient(135deg, var(--card-per-a) 0%, var(--card-per-b) 100%);
+    }
+    .card-banner.cert {
+      background: linear-gradient(135deg, var(--card-cert-a) 0%, var(--card-cert-b) 100%);
+    }
+    /* Decorative circle */
+    .card-banner::after {
+      content: '';
+      position: absolute;
+      bottom: -30px;
+      right: -30px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.07);
+      pointer-events: none;
+    }
+
+    .card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(6px);
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 10px;
+    }
+    .card-title {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 3px;
+    }
+    .card-sub {
+      font-size: 13px;
+      opacity: 0.75;
+      margin-bottom: 14px;
+    }
+    .card-progress-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-bar-bg {
+      flex: 1;
+      height: 5px;
+      background: rgba(255,255,255,0.22);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .card-bar-fill {
+      height: 100%;
+      background: rgba(255,255,255,0.85);
+      border-radius: 99px;
+    }
+    .card-pct {
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    /* ============================================================
+       Skill rows  (Widget DS: .toggle-row inspired)
+       ============================================================ */
+    .card-body { padding: 4px 0; flex: 1; overflow-y: auto; min-height: 0; }
+
+    .skill-row { border-bottom: 1px solid var(--ui-border); }
+    .skill-row:last-child { border-bottom: none; }
+
+    .skill-row-hd {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 20px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      transition: background var(--dur);
+    }
+    .skill-row-hd:active { background: var(--ui-surface-2); }
+
+    .skill-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      flex-shrink: 0;
+    }
+    .si-purple { background: var(--ui-accent-muted); color: var(--ui-accent); }
+    .si-orange  { background: #fff0e8; color: #ea580c; }
+    .si-blue    { background: #e0f2fe; color: #0284c7; }
+    .si-green   { background: var(--ui-success-muted); color: var(--ui-success); }
+    [data-theme="dark"] .si-orange { background: #3d1808; color: #fb923c; }
+    [data-theme="dark"] .si-blue   { background: #0c1a2e; color: #38bdf8; }
+    [data-theme="dark"] .si-green  { background: var(--ui-success-muted); }
+    /* Coursera blue family (Card 1) */
+    .si-cb-1 { background: #dbeafe; color: #1d4ed8; }
+    .si-cb-2 { background: #e0f2fe; color: #0369a1; }
+    .si-cb-3 { background: #eff6ff; color: #2563eb; }
+    [data-theme="dark"] .si-cb-1 { background: #1e3a5f; color: #60a5fa; }
+    [data-theme="dark"] .si-cb-2 { background: #0c2340; color: #38bdf8; }
+    [data-theme="dark"] .si-cb-3 { background: #172554; color: #93c5fd; }
+    /* Udemy purple family (Card 2) */
+    .si-up-1 { background: #ede9fb; color: #5624d0; }
+    .si-up-2 { background: #f3e8ff; color: #7c3aed; }
+    .si-up-3 { background: #f5f3ff; color: #8b5cf6; }
+    [data-theme="dark"] .si-up-1 { background: #2d1a5e; color: #a78bfa; }
+    [data-theme="dark"] .si-up-2 { background: #3b1a6e; color: #c084fc; }
+    [data-theme="dark"] .si-up-3 { background: #2e1a54; color: #d8b4fe; }
+
+    .skill-info { flex: 1; min-width: 0; }
+    .skill-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ui-text-primary);
+      margin-bottom: 6px;
+    }
+    .skill-track {
+      height: 5px;
+      background: var(--ui-border);
+      border-radius: 99px;
+      overflow: hidden;
+      margin-bottom: 4px;
+    }
+    .skill-fill { height: 100%; border-radius: 99px; }
+    .fill-hi  { background: var(--ui-success); }
+    .fill-mid { background: var(--ui-warning); }
+    .fill-lo  { background: var(--ui-error); }
+
+    .skill-foot {
+      display: flex;
+      justify-content: space-between;
+    }
+    .skill-pct  { font-size: 12px; font-weight: 700; color: var(--ui-text-secondary); }
+    .skill-los  { font-size: 11px; color: var(--ui-text-tertiary); }
+
+    .chevron {
+      color: var(--ui-text-tertiary);
+      font-size: 16px;
+      flex-shrink: 0;
+      transition: transform 300ms var(--ease);
+    }
+    .skill-row.open .chevron { transform: rotate(180deg); }
+
+    /* ============================================================
+       Learning objectives accordion
+       ============================================================ */
+    .lo-list {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 380ms var(--ease);
+    }
+    .skill-row.open .lo-list { max-height: 900px; }
+
+    .lo-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 20px 11px 30px;
+      border-bottom: 1px solid var(--ui-border);
+      background: var(--ui-surface-2);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: background var(--dur);
+    }
+    .lo-item:last-child { border-bottom: none; }
+    .lo-item:active { background: var(--ui-border); }
+
+    .lo-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .lo-dot.hi   { background: var(--ui-success); }
+    .lo-dot.mid  { background: var(--ui-warning); }
+    .lo-dot.lo   { background: var(--ui-error); }
+    .lo-dot.none { background: var(--ui-border-strong); }
+
+    .lo-body { flex: 1; min-width: 0; }
+    .lo-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ui-text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 4px;
+    }
+    .lo-bar-bg {
+      height: 3px;
+      background: var(--ui-border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .lo-bar-fill { height: 100%; border-radius: 99px; }
+
+    .lo-pct {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ui-text-secondary);
+      min-width: 30px;
+      text-align: right;
+    }
+    .lo-caret {
+      font-size: 13px;
+      color: var(--ui-text-tertiary);
+      flex-shrink: 0;
+    }
+
+    .skill-decay-flag {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      background: var(--ui-warning-muted);
+      color: var(--ui-warning);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 10px;
+      font-weight: 700;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+    [data-theme="dark"] .skill-decay-flag { color: #fbbf24; }
+
+    /* Decay badge */
+    .decay {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      background: var(--ui-warning-muted);
+      color: var(--ui-warning);
+      border-radius: 4px;
+      padding: 1px 5px;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      flex-shrink: 0;
+    }
+    [data-theme="dark"] .decay { color: #fbbf24; }
+
+    /* ============================================================
+       Bottom navigation
+       ============================================================ */
+    .bottom-nav {
+      display: flex;
+      background: var(--ui-surface);
+      border-top: 1px solid var(--ui-border);
+      padding: 8px 0 28px;
+      flex-shrink: 0;
+    }
+    .nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      color: var(--ui-text-tertiary);
+      padding: 6px 0;
+      transition: color var(--dur);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .nav-item.active { color: var(--ui-accent); }
+    .nav-item i { font-size: 22px; }
+    .nav-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .nav-pip {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--ui-accent);
+      opacity: 0;
+      margin-top: 1px;
+      transition: opacity var(--dur);
+    }
+    .nav-item.active .nav-pip { opacity: 1; }
+
+    /* ============================================================
+       Course modal — Widget DS bottom sheet pattern
+       ============================================================ */
+    .backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.48);
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 300ms var(--ease);
+    }
+    .backdrop.show { opacity: 1; pointer-events: all; }
+
+    .modal {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--ui-surface);
+      border-radius: 28px 28px 0 0;
+      z-index: 301;
+      max-height: 86%;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-modal);
+      transform: translateY(100%);
+      transition: transform 380ms var(--ease);
+    }
+    .modal.show { transform: translateY(0); }
+
+    .modal-handle {
+      width: 36px;
+      height: 4px;
+      background: var(--ui-border-strong);
+      border-radius: 99px;
+      margin: 12px auto 0;
+      flex-shrink: 0;
+    }
+    .modal-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px 8px;
+      flex-shrink: 0;
+    }
+    .modal-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--ui-text-primary);
+    }
+    .modal-close {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--ui-surface-2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--ui-text-secondary);
+      font-size: 15px;
+    }
+
+    /* LO context pill */
+    .modal-context {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 20px 14px;
+      flex-shrink: 0;
+    }
+    .lo-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--ui-accent-muted);
+      color: var(--ui-accent);
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      max-width: 220px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .lo-pill-pct {
+      font-size: 12px;
+      color: var(--ui-text-secondary);
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    /* Modal scrollable area */
+    .modal-body {
+      overflow-y: auto;
+      flex: 1;
+      padding: 0 20px 28px;
+      scrollbar-width: none;
+    }
+    .modal-body::-webkit-scrollbar { display: none; }
+
+    .modal-sec-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--ui-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      margin-bottom: 12px;
+    }
+
+    /* Course card */
+    .course-card {
+      background: var(--ui-surface-2);
+      border: 1px solid var(--ui-border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .course-thumb {
+      width: 100%;
+      height: 110px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 10px 12px;
+    }
+    .course-thumb-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+    }
+    .course-thumb::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.45) 100%);
+      z-index: 1;
+    }
+    .course-thumb-icon {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      font-size: 100px;
+      color: rgba(255,255,255,0.1);
+      line-height: 1;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .course-bestseller {
+      position: absolute;
+      top: 10px;
+      left: 12px;
+      background: #f4c430;
+      color: #1c1d1f;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 2px 7px;
+      border-radius: 3px;
+      z-index: 2;
+    }
+    .course-dur-chip {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: rgba(0,0,0,0.45);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      z-index: 2;
+    }
+    .course-thumb-provider {
+      position: relative;
+      z-index: 2;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: 6px;
+      padding: 3px 9px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 60%;
+    }
+    .course-info { padding: 12px; }
+    .course-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ui-text-primary);
+      line-height: 1.3;
+      margin-bottom: 5px;
+    }
+    .course-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .course-inst { font-size: 11px; color: var(--ui-text-secondary); }
+    .course-rating {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ui-warning);
+    }
+    .course-dur {
+      font-size: 11px;
+      color: var(--ui-text-tertiary);
+      margin-left: auto;
+    }
+    .course-improvement {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ui-success);
+      margin-left: auto;
+    }
+    /* Interactive badge on thumbnail */
+    .course-interactive-chip {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: rgba(86,36,208,0.88);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      z-index: 2;
+    }
+
+    /* ============================================================
+       Certification badges
+       ============================================================ */
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px 8px;
+      padding: 16px;
+      justify-items: center;
+    }
+    .cert-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+    .cert-wrap {
+      position: relative;
+      width: 80px;
+      height: 90px;
+    }
+    .cert-shape {
+      position: absolute;
+      inset: 0;
+      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    }
+    .cert-outer {
+      position: absolute;
+      inset: 0;
+      background: var(--cc);
+    }
+    .cert-inner {
+      position: absolute;
+      inset: 4px;
+      clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+      background: #1e2a3a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 4px 16px;
+    }
+    .cert-title {
+      font-size: 8px;
+      font-weight: 700;
+      color: #fff;
+      text-align: center;
+      line-height: 1.25;
+    }
+    .cert-check {
+      font-size: 11px;
+      color: var(--cc);
+    }
+    .cert-ribbon {
+      position: absolute;
+      left: -6px;
+      right: -6px;
+      top: calc(50% + 4px);
+      transform: translateY(-50%);
+      background: var(--cc);
+      color: #fff;
+      font-size: 7.5px;
+      font-weight: 800;
+      text-align: center;
+      padding: 3px 0;
+      letter-spacing: 0.12em;
+      z-index: 5;
+    }
+    .cert-name {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--ui-text-secondary);
+      text-align: center;
+      line-height: 1.2;
+      max-width: 72px;
+    }
+    [data-theme="dark"] .cert-inner { background: #0f1923; }
+
+    /* Widget DS buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      border: none;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 8px 13px;
+      transition: all var(--dur);
+      -webkit-tap-highlight-color: transparent;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: var(--btn-primary-bg);
+      color: var(--btn-primary-fg);
+      flex: 1;
+    }
+    .btn-primary:active { background: var(--btn-primary-hover); }
+
+    /* Widget DS: btn-outline-continue */
+    .btn-outline-continue {
+      background: transparent;
+      color: var(--btn-outline-fg);
+      border: 1.5px solid var(--btn-outline-bd);
+    }
+    /* Widget DS: btn-ghost */
+    .btn-ghost {
+      background: var(--btn-ghost-bg);
+      color: var(--btn-ghost-fg);
+      border: 1px solid var(--ui-border);
+    }
+
+    .course-actions { display: flex; gap: 7px; }
+
+  </style>
+</head>
+<body>
+
+<div class="phone" id="phone">
+  <div class="island"></div>
+
+  <!-- Status bar -->
+  <div class="status-bar">
+    <span class="status-time">9:41</span>
+    <div class="status-icons">
+      <i class="ph ph-wifi-high"></i>
+      <i class="ph ph-cell-signal-full"></i>
+      <i class="ph-fill ph-battery-full"></i>
+    </div>
+  </div>
+
+  <!-- App header -->
+  <div class="app-header">
+    <div class="header-btn" id="backBtn" onclick="pulse(this)">
+      <i class="ph-bold ph-caret-left"></i>
+    </div>
+    <span class="header-title">My Progress</span>
+    <div class="header-btn" id="themeBtn" onclick="toggleTheme()">
+      <i class="ph ph-moon" id="themeIcon"></i>
+    </div>
+    <div class="header-avatar">OL</div>
+  </div>
+
+  <!-- Scrollable screen -->
+  <div class="screen" id="screen">
+
+    <!-- Wallet stats -->
+    <div class="stats-strip">
+      <div class="stat-chip">
+        <div class="stat-value">24 <span class="stat-value-suffix">skills</span></div>
+        <div class="stat-label">In progress</div>
+      </div>
+      <div class="stat-chip">
+        <div class="stat-value">8 <span class="stat-value-suffix">verified</span></div>
+        <div class="stat-label">Last 90 days</div>
+      </div>
+      <div class="stat-chip">
+        <div class="stat-value" style="color:var(--ui-warning)">1 <span class="stat-value-suffix" style="color:var(--ui-warning)">⚠</span></div>
+        <div class="stat-label">Needs renewal</div>
+      </div>
+    </div>
+
+    <!-- Section header -->
+    <div class="section-header">
+      <span class="section-label">Skill Cards</span>
+    </div>
+
+    <!-- Carousel -->
+    <div class="carousel-wrap">
+      <div class="carousel" id="carousel"
+           onmousedown="dragStart(event)"
+           ontouchstart="dragStart(event)"
+           onmousemove="dragMove(event)"
+           ontouchmove="dragMove(event)"
+           onmouseup="dragEnd(event)"
+           ontouchend="dragEnd(event)"
+           onmouseleave="dragEnd(event)">
+
+        <!-- ── Card 1: Professional ── -->
+        <div class="skill-card">
+          <div class="card-banner pro">
+            <div class="card-badge"><i class="ph-bold ph-briefcase"></i> Professional Goals</div>
+            <div class="card-title">Product Design</div>
+            <div class="card-sub">3 skills · Senior track</div>
+            <div class="card-progress-row">
+              <div class="card-bar-bg">
+                <div class="card-bar-fill" style="width:60%"></div>
+              </div>
+              <span class="card-pct">60%</span>
+            </div>
+          </div>
+          <div class="card-body">
+
+            <div class="skill-row" id="sp0">
+              <div class="skill-row-hd" onclick="toggle('sp0')">
+                <div class="skill-icon si-cb-1"><i class="ph-fill ph-pen-nib"></i></div>
+                <div class="skill-info">
+                  <div class="skill-name">Advanced Figma <span class="skill-decay-flag"><i class="ph ph-clock-countdown"></i> 1 renewal</span></div>
+                  <div class="skill-track"><div class="skill-fill fill-hi" style="width:72%"></div></div>
+                  <div class="skill-foot"><span class="skill-pct">72%</span><span class="skill-los">12 objectives</span></div>
+                </div>
+                <i class="ph-bold ph-caret-down chevron"></i>
+              </div>
+              <div class="lo-list" id="lo-sp0"></div>
+            </div>
+
+            <div class="skill-row" id="sp1">
+              <div class="skill-row-hd" onclick="toggle('sp1')">
+                <div class="skill-icon si-cb-2"><i class="ph-fill ph-robot"></i></div>
+                <div class="skill-info">
+                  <div class="skill-name">Designing with AI</div>
+                  <div class="skill-track"><div class="skill-fill fill-mid" style="width:48%"></div></div>
+                  <div class="skill-foot"><span class="skill-pct">48%</span><span class="skill-los">11 objectives</span></div>
+                </div>
+                <i class="ph-bold ph-caret-down chevron"></i>
+              </div>
+              <div class="lo-list" id="lo-sp1"></div>
+            </div>
+
+            <div class="skill-row" id="sp2">
+              <div class="skill-row-hd" onclick="toggle('sp2')">
+                <div class="skill-icon si-cb-3"><i class="ph-fill ph-squares-four"></i></div>
+                <div class="skill-info">
+                  <div class="skill-name">Design Systems & Tokens <span class="skill-decay-flag"><i class="ph ph-clock-countdown"></i> 1 renewal</span></div>
+                  <div class="skill-track"><div class="skill-fill fill-hi" style="width:61%"></div></div>
+                  <div class="skill-foot"><span class="skill-pct">61%</span><span class="skill-los">10 objectives</span></div>
+                </div>
+                <i class="ph-bold ph-caret-down chevron"></i>
+              </div>
+              <div class="lo-list" id="lo-sp2"></div>
+            </div>
+
+          </div>
+        </div><!-- /card 1 -->
+
+        <!-- ── Card 2: Personal ── -->
+        <div class="skill-card">
+          <div class="card-banner per">
+            <div class="card-badge"><i class="ph-bold ph-sparkle"></i> Personal Goals</div>
+            <div class="card-title">Building in Code</div>
+            <div class="card-sub">3 skills · Beginner track</div>
+            <div class="card-progress-row">
+              <div class="card-bar-bg">
+                <div class="card-bar-fill" style="width:28%"></div>
+              </div>
+              <span class="card-pct">28%</span>
+            </div>
+          </div>
+          <div class="card-body">
+
+            <div class="skill-row" id="ss0">
+              <div class="skill-row-hd" onclick="toggle('ss0')">
+                <div class="skill-icon si-up-1"><i class="ph-fill ph-code"></i></div>
+                <div class="skill-info">
+                  <div class="skill-name">Programming Fundamentals</div>
+                  <div class="skill-track"><div class="skill-fill fill-mid" style="width:34%"></div></div>
+                  <div class="skill-foot"><span class="skill-pct">34%</span><span class="skill-los">11 objectives</span></div>
+                </div>
+                <i class="ph-bold ph-caret-down chevron"></i>
+              </div>
+              <div class="lo-list" id="lo-ss0"></div>
+            </div>
+
+            <div class="skill-row" id="ss1">
+              <div class="skill-row-hd" onclick="toggle('ss1')">
+                <div class="skill-icon si-up-2"><i class="ph-fill ph-globe"></i></div>
+                <div class="skill-info">
+                  <div class="skill-name">Web Development</div>
+                  <div class="skill-track"><div class="skill-fill fill-lo" style="width:22%"></div></div>
+                  <div class="skill-foot"><span class="skill-pct">22%</span><span class="skill-los">11 objectives</span></div>
+                </div>
+                <i class="ph-bold ph-caret-down chevron"></i>
+              </div>
+              <div class="lo-list" id="lo-ss1"></div>
+            </div>
+
+            <div class="skill-row" id="ss2">
+              <div class="skill-row-hd" onclick="toggle('ss2')">
+                <div class="skill-icon si-up-3"><i class="ph-fill ph-chart-bar"></i></div>
+                <div class="skill-info">
+                  <div class="skill-name">Data Literacy</div>
+                  <div class="skill-track"><div class="skill-fill fill-lo" style="width:28%"></div></div>
+                  <div class="skill-foot"><span class="skill-pct">28%</span><span class="skill-los">10 objectives</span></div>
+                </div>
+                <i class="ph-bold ph-caret-down chevron"></i>
+              </div>
+              <div class="lo-list" id="lo-ss2"></div>
+            </div>
+
+          </div>
+        </div><!-- /card 2 -->
+
+        <!-- ── Card 3: Certifications ── -->
+        <div class="skill-card">
+          <div class="card-banner cert">
+            <div class="card-badge"><i class="ph-bold ph-seal-check"></i> Achievements</div>
+            <div class="card-title">Certifications</div>
+            <div class="card-sub">6 earned · 2 pending</div>
+          </div>
+          <div class="card-body">
+            <div class="cert-grid">
+
+              <div class="cert-badge">
+                <div class="cert-wrap" style="--cc:#0056D2">
+                  <div class="cert-shape"><div class="cert-outer"></div><div class="cert-inner"><span class="cert-title">Advanced<br>Figma</span><span class="cert-check"><i class="ph-bold ph-check"></i></span></div></div>
+                  <div class="cert-ribbon">CERTIFIED</div>
+                </div>
+                <span class="cert-name">Expert</span>
+              </div>
+
+              <div class="cert-badge">
+                <div class="cert-wrap" style="--cc:#a435f0">
+                  <div class="cert-shape"><div class="cert-outer"></div><div class="cert-inner"><span class="cert-title">Design<br>Systems</span><span class="cert-check"><i class="ph-bold ph-check"></i></span></div></div>
+                  <div class="cert-ribbon">CERTIFIED</div>
+                </div>
+                <span class="cert-name">Professional</span>
+              </div>
+
+              <div class="cert-badge">
+                <div class="cert-wrap" style="--cc:#0891b2">
+                  <div class="cert-shape"><div class="cert-outer"></div><div class="cert-inner"><span class="cert-title">UI/UX<br>Design</span><span class="cert-check"><i class="ph-bold ph-check"></i></span></div></div>
+                  <div class="cert-ribbon">CERTIFIED</div>
+                </div>
+                <span class="cert-name">Advanced</span>
+              </div>
+
+              <div class="cert-badge">
+                <div class="cert-wrap" style="--cc:#ea580c">
+                  <div class="cert-shape"><div class="cert-outer"></div><div class="cert-inner"><span class="cert-title">Proto&shy;typing</span><span class="cert-check"><i class="ph-bold ph-check"></i></span></div></div>
+                  <div class="cert-ribbon">CERTIFIED</div>
+                </div>
+                <span class="cert-name">Practitioner</span>
+              </div>
+
+              <div class="cert-badge">
+                <div class="cert-wrap" style="--cc:#16a34a">
+                  <div class="cert-shape"><div class="cert-outer"></div><div class="cert-inner"><span class="cert-title">Design<br>Thinking</span><span class="cert-check"><i class="ph-bold ph-check"></i></span></div></div>
+                  <div class="cert-ribbon">CERTIFIED</div>
+                </div>
+                <span class="cert-name">Foundation</span>
+              </div>
+
+              <div class="cert-badge">
+                <div class="cert-wrap" style="--cc:#ca8a04">
+                  <div class="cert-shape"><div class="cert-outer"></div><div class="cert-inner"><span class="cert-title">Accessi&shy;bility</span><span class="cert-check"><i class="ph-bold ph-check"></i></span></div></div>
+                  <div class="cert-ribbon">CERTIFIED</div>
+                </div>
+                <span class="cert-name">Certified</span>
+              </div>
+
+            </div>
+          </div>
+        </div><!-- /card 3 -->
+
+      </div><!-- /carousel -->
+    </div><!-- /carousel-wrap -->
+
+    <!-- Pagination dots below cards -->
+    <div class="carousel-dots-below">
+      <div class="dot active" id="d0" onclick="goTo(0)"></div>
+      <div class="dot" id="d1" onclick="goTo(1)"></div>
+      <div class="dot" id="d2" onclick="goTo(2)"></div>
+    </div>
+
+    <div style="height:12px;flex-shrink:0"></div>
+  </div><!-- /screen -->
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <div class="nav-item" onclick="setNav(this)">
+      <i class="ph ph-house"></i>
+      <span class="nav-label">Home</span>
+      <div class="nav-pip"></div>
+    </div>
+    <div class="nav-item" onclick="setNav(this)">
+      <i class="ph ph-play-circle"></i>
+      <span class="nav-label">Learn</span>
+      <div class="nav-pip"></div>
+    </div>
+    <div class="nav-item active" onclick="setNav(this)">
+      <i class="ph-fill ph-chart-line-up"></i>
+      <span class="nav-label">Progress</span>
+      <div class="nav-pip"></div>
+    </div>
+    <div class="nav-item" onclick="setNav(this)">
+      <i class="ph ph-certificate"></i>
+      <span class="nav-label">Wallet</span>
+      <div class="nav-pip"></div>
+    </div>
+    <div class="nav-item" onclick="setNav(this)">
+      <i class="ph ph-user-circle"></i>
+      <span class="nav-label">Profile</span>
+      <div class="nav-pip"></div>
+    </div>
+  </div>
+
+  <!-- Backdrop -->
+  <div class="backdrop" id="backdrop" onclick="closeModal()"></div>
+
+  <!-- Course modal -->
+  <div class="modal" id="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-hd">
+      <span class="modal-title">Improve this skill</span>
+      <div class="modal-close" onclick="closeModal()"><i class="ph-bold ph-x"></i></div>
+    </div>
+    <div class="modal-context">
+      <span class="lo-pill"><i class="ph-bold ph-target"></i><span id="mLo">—</span></span>
+      <span class="lo-pill-pct" id="mPct"></span>
+    </div>
+    <div class="modal-body" id="mBody"></div>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+/* ================================================================
+   DATA
+   ================================================================ */
+var DATA = {
+  sp0: { los: [
+    { n:'Variables & Design Tokens',      p:85, c:0 },
+    { n:'Auto Layout (Advanced)',          p:90, c:0 },
+    { n:'Component Architecture',         p:75, c:0 },
+    { n:'Prototyping & Smart Animate',    p:65, c:1 },
+    { n:'Dev Mode & Handoff',             p:80, c:0 },
+    { n:'Figma AI Features',              p:55, c:1 },
+    { n:'Plugin Development',             p:40, c:2, decay:1 },
+    { n:'Branching & Version Control',    p:70, c:0 },
+    { n:'Multi-file Libraries',           p:60, c:1 },
+    { n:'Accessibility in Figma',         p:50, c:1 },
+    { n:'Interactive Components',         p:45, c:2 },
+    { n:'Responsive Frames',              p:68, c:0 }
+  ]},
+  sp1: { los: [
+    { n:'Prompt Engineering for Designers', p:60, c:1 },
+    { n:'AI Image Generation',              p:55, c:1 },
+    { n:'Generative UI Patterns',           p:40, c:2 },
+    { n:'AI-Assisted Research',             p:35, c:1 },
+    { n:'Co-creation Workflows',            p:45, c:1 },
+    { n:'Ethics in AI Design',              p:70, c:0 },
+    { n:'AI Prototyping Tools',             p:30, c:2 },
+    { n:'LLM Interface Design',             p:25, c:2 },
+    { n:'AI Content Design',               p:50, c:1 },
+    { n:'Measuring AI Impact',             p:20, c:2 },
+    { n:'AI in Design Systems',            p:15, c:2 }
+  ]},
+  sp2: { los: [
+    { n:'Token Architecture',              p:75, c:0 },
+    { n:'Semantic Naming Conventions',     p:80, c:0 },
+    { n:'Multi-brand Theming',             p:65, c:1 },
+    { n:'Token Tooling (Style Dictionary)',p:55, c:1 },
+    { n:'Component API Design',            p:70, c:0 },
+    { n:'Documentation Patterns',          p:60, c:1 },
+    { n:'Governance Models',               p:50, c:2, decay:1 },
+    { n:'Versioning & Changelogs',         p:45, c:1 },
+    { n:'Contribution Workflows',          p:40, c:2 },
+    { n:'Adoption Metrics',                p:35, c:2 }
+  ]},
+  ss0: { los: [
+    { n:'Variables & Data Types',  p:65, c:2 },
+    { n:'Control Flow',            p:55, c:2 },
+    { n:'Functions & Scope',       p:45, c:2 },
+    { n:'Arrays & Objects',        p:40, c:2 },
+    { n:'DOM Manipulation',        p:30, c:2 },
+    { n:'Async & Promises',        p:20, c:2 },
+    { n:'Error Handling',          p:25, c:2 },
+    { n:'Module Systems',          p:15, c:2 },
+    { n:'Debugging Techniques',    p:35, c:2 },
+    { n:'Git Fundamentals',        p:50, c:2 },
+    { n:'Testing Basics',          p:10, c:2 }
+  ]},
+  ss1: { los: [
+    { n:'HTML Semantics',       p:45, c:2 },
+    { n:'CSS Fundamentals',     p:40, c:2 },
+    { n:'Flexbox & Grid',       p:35, c:2 },
+    { n:'Responsive Design',    p:30, c:2 },
+    { n:'JavaScript Basics',    p:25, c:2 },
+    { n:'React Fundamentals',   p:15, c:2 },
+    { n:'API Integration',      p:10, c:2 },
+    { n:'Performance Basics',   p:20, c:2 },
+    { n:'Web Accessibility',    p:25, c:2 },
+    { n:'Deployment & Hosting', p:10, c:2 },
+    { n:'Version Control',      p:50, c:2 }
+  ]},
+  ss2: { los: [
+    { n:'Data Types & Structures',   p:40, c:2 },
+    { n:'Reading Charts & Graphs',   p:55, c:2 },
+    { n:'Statistical Concepts',      p:30, c:2 },
+    { n:'SQL Basics',                p:20, c:2 },
+    { n:'Data Cleaning',             p:25, c:2 },
+    { n:'Visualization Tools',       p:35, c:1 },
+    { n:'A/B Testing Fundamentals',  p:30, c:1 },
+    { n:'Product Analytics',         p:25, c:1 },
+    { n:'Storytelling with Data',    p:45, c:1 },
+    { n:'Data Ethics',               p:50, c:0 }
+  ]}
+};
+
+var COURSES = [
+  [
+    { title:'Figma: Advanced Variables & Tokens', inst:'Design Systems Co.',   stars:'4.8', dur:'6h 30m', icon:'ph-vector-two',   bestseller:true,  type:'video',       improvement:'+14%', img:'images/course%20thumbnails/image-32.png' },
+    { title:'Figma Dev Mode Mastery',             inst:'Figma Official',        stars:'4.7', dur:'4h 15m', icon:'ph-code',         bestseller:false, type:'interactive', improvement:'+18%', img:'images/course%20thumbnails/prompt-engineering.png' },
+    { title:'Design Systems at Scale',            inst:'Brad Frost & Dan Mall', stars:'4.9', dur:'8h 00m', icon:'ph-squares-four', bestseller:true,  type:'video',       improvement:'+22%', img:'images/course%20thumbnails/image-06.png' }
+  ],
+  [
+    { title:'AI for Designers: Prompt to Product', inst:'Lex Fridman Institute', stars:'4.6', dur:'5h 45m', icon:'ph-robot',       bestseller:false, type:'interactive', improvement:'+16%', img:'images/course%20thumbnails/Frame%201430104858.png' },
+    { title:'Generative UI Design Patterns',       inst:'Google UX Design',      stars:'4.5', dur:'3h 20m', icon:'ph-magic-wand',  bestseller:false, type:'interactive', improvement:'+12%', img:'images/course%20thumbnails/generative-ai.png' },
+    { title:'Ethics in AI Design',                 inst:'MIT OpenCourseWare',    stars:'4.7', dur:'4h 00m', icon:'ph-scales',      bestseller:true,  type:'video',       improvement:'+9%',  img:'images/course%20thumbnails/image-46.png' }
+  ],
+  [
+    { title:'JavaScript: The Complete Guide 2025', inst:'Maximilian Schwarzmüller', stars:'4.8', dur:'52h', icon:'ph-file-js',    bestseller:true,  type:'video',       improvement:'+31%', img:'images/course%20thumbnails/image-48.png' },
+    { title:'The Web Developer Bootcamp 2025',     inst:'Colt Steele',              stars:'4.7', dur:'65h', icon:'ph-globe',       bestseller:true,  type:'video',       improvement:'+28%', img:'images/course%20thumbnails/data-science.png' },
+    { title:"CS50: Harvard's Intro to CS",         inst:'Harvard / edX',            stars:'4.9', dur:'40h', icon:'ph-mortarboard', bestseller:false, type:'interactive', improvement:'+35%', img:'images/course%20thumbnails/image-03.png' }
+  ]
+];
+
+/* ================================================================
+   LO RENDERING
+   ================================================================ */
+function dotClass(p) { return p >= 70 ? 'hi' : p >= 40 ? 'mid' : p > 0 ? 'lo' : 'none'; }
+function fillClass(p){ return p >= 70 ? 'fill-hi' : p >= 40 ? 'fill-mid' : 'fill-lo'; }
+
+function renderLOs(id) {
+  var el = document.getElementById('lo-' + id);
+  if (!el || el.dataset.done) return;
+  var d = DATA[id]; if (!d) return;
+  var h = '';
+  for (var i = 0; i < d.los.length; i++) {
+    var lo = d.los[i];
+    var dc = dotClass(lo.p), fc = fillClass(lo.p);
+    var decayHtml = lo.decay
+      ? '<span class="decay"><i class="ph ph-clock-countdown"></i> Renew</span>'
+      : '';
+    h += '<div class="lo-item" data-skill="' + id + '" data-idx="' + i + '" onclick="openModal(this)">'
+      + '<div class="lo-dot ' + dc + '"></div>'
+      + '<div class="lo-body">'
+      +   '<div class="lo-name">' + lo.n + decayHtml + '</div>'
+      +   '<div class="lo-bar-bg"><div class="lo-bar-fill ' + fc + '" style="width:' + lo.p + '%"></div></div>'
+      + '</div>'
+      + '<span class="lo-pct">' + lo.p + '%</span>'
+      + '<i class="ph ph-caret-right lo-caret"></i>'
+      + '</div>';
+  }
+  el.innerHTML = h;
+  el.dataset.done = '1';
+}
+
+/* ================================================================
+   ACCORDION
+   ================================================================ */
+function toggle(id) {
+  var row = document.getElementById(id);
+  var isOpen = row.classList.contains('open');
+  document.querySelectorAll('.skill-row.open').forEach(function(r){ r.classList.remove('open'); });
+  if (!isOpen) {
+    row.classList.add('open');
+    renderLOs(id);
+    /* scroll into view after transition */
+    setTimeout(function() {
+      var hd = row.querySelector('.skill-row-hd');
+      hd && hd.scrollIntoView({ behavior:'smooth', block:'nearest' });
+    }, 120);
+  }
+}
+
+/* ================================================================
+   CAROUSEL
+   ================================================================ */
+var cur = 0, total = 3;
+var carousel  = document.getElementById('carousel');
+var carWrap   = document.querySelector('.carousel-wrap');
+var sx = 0, dragging = false, moved = false;
+
+function goTo(idx) {
+  cur = Math.max(0, Math.min(idx, total - 1));
+  var card = carousel.querySelector('.skill-card');
+  var step = card.offsetWidth + 12;
+  carousel.style.transform = 'translateX(-' + (cur * step) + 'px)';
+  document.getElementById('d0').className = 'dot' + (cur === 0 ? ' active' : '');
+  document.getElementById('d1').className = 'dot' + (cur === 1 ? ' active' : '');
+  document.getElementById('d2').className = 'dot' + (cur === 2 ? ' active' : '');
+}
+
+function dragStart(e) {
+  dragging = true; moved = false;
+  sx = e.touches ? e.touches[0].clientX : e.clientX;
+}
+function dragMove(e) {
+  if (!dragging) return;
+  var dx = (e.touches ? e.touches[0].clientX : e.clientX) - sx;
+  if (Math.abs(dx) > 5) moved = true;
+}
+function dragEnd(e) {
+  if (!dragging) return;
+  dragging = false;
+  if (!moved) return;
+  var ex = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+  var dx = ex - sx;
+  if (Math.abs(dx) > 40) goTo(dx < 0 ? cur + 1 : cur - 1);
+}
+
+/* ================================================================
+   MODAL
+   ================================================================ */
+function openModal(el) {
+  var sid = el.dataset.skill;
+  var idx = parseInt(el.dataset.idx, 10);
+  var lo = DATA[sid].los[idx];
+  var courses = COURSES[lo.c] || COURSES[0];
+
+  document.getElementById('mLo').textContent = lo.n;
+  document.getElementById('mPct').textContent = lo.p + '% complete';
+
+  var h = '<div class="modal-sec-label">Recommended Courses</div>';
+  for (var i = 0; i < courses.length; i++) {
+    var c = courses[i];
+    var bsHtml = c.bestseller ? '<span class="course-bestseller">Bestseller</span>' : '';
+    var chipHtml = c.type === 'interactive'
+      ? '<span class="course-interactive-chip"><i class="ph ph-cursor-click"></i> Interactive</span>'
+      : '<span class="course-dur-chip"><i class="ph ph-clock"></i> ' + c.dur + '</span>';
+    h += '<div class="course-card">'
+      + '<div class="course-thumb">'
+      +   '<img class="course-thumb-img" src="' + c.img + '" alt="">'
+      +   bsHtml
+      +   chipHtml
+      +   '<i class="ph-fill ' + c.icon + ' course-thumb-icon"></i>'
+      +   '<span class="course-thumb-provider">' + c.inst + '</span>'
+      + '</div>'
+      + '<div class="course-info">'
+      +   '<div class="course-title">' + c.title + '</div>'
+      +   '<div class="course-meta">'
+      +     '<span class="course-inst">' + c.inst + '</span>'
+      +     '<span class="course-rating"><i class="ph-fill ph-star"></i> ' + c.stars + '</span>'
+      +     '<span class="course-improvement">' + c.improvement + ' skill</span>'
+      +   '</div>'
+      +   '<div class="course-actions">'
+      +     '<button class="btn btn-primary" onclick="enroll(this)"><i class="ph-bold ph-lightning"></i> Enroll</button>'
+      +     '<button class="btn btn-outline-continue" onclick="saveCourse(this)"><i class="ph ph-bookmark-simple"></i> Save</button>'
+      +     '<button class="btn btn-ghost"><i class="ph ph-play"></i> Preview</button>'
+      +   '</div>'
+      + '</div>'
+      + '</div>';
+  }
+  document.getElementById('mBody').innerHTML = h;
+  document.getElementById('backdrop').classList.add('show');
+  document.getElementById('modal').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('backdrop').classList.remove('show');
+  document.getElementById('modal').classList.remove('show');
+}
+
+function enroll(btn) {
+  btn.innerHTML = '<i class="ph-fill ph-check-circle"></i> Enrolled!';
+  btn.style.background = 'var(--ui-success)';
+  btn.style.color = '#fff';
+  setTimeout(function(){
+    btn.innerHTML = '<i class="ph-bold ph-lightning"></i> Enroll';
+    btn.style.background = ''; btn.style.color = '';
+  }, 2200);
+}
+
+function saveCourse(btn) {
+  var i = btn.querySelector('i');
+  var saved = i.className.includes('ph-fill');
+  i.className = saved ? 'ph ph-bookmark-simple' : 'ph-fill ph-bookmark-simple';
+  btn.style.color = saved ? '' : 'var(--ui-accent)';
+  btn.style.borderColor = saved ? '' : 'var(--ui-accent)';
+}
+
+/* ================================================================
+   THEME TOGGLE
+   ================================================================ */
+var dark = false;
+function toggleTheme() {
+  dark = !dark;
+  document.getElementById('phone').setAttribute('data-theme', dark ? 'dark' : '');
+  document.getElementById('themeIcon').className = dark ? 'ph-fill ph-sun' : 'ph ph-moon';
+}
+
+/* ================================================================
+   NAV + MISC
+   ================================================================ */
+function setNav(el) {
+  document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
+  el.classList.add('active');
+}
+
+function pulse(el) {
+  el.style.transform = 'scale(0.88)';
+  setTimeout(function(){ el.style.transform = ''; }, 140);
+}
+</script>
+</body>
+</html>

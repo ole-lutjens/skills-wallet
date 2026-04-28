@@ -1,0 +1,6 @@
+.DS_Store
+**/.DS_Store
+.claude/
+context/
+claude-code-fixes.md
+platform-vision-visuals/
