@@ -1019,6 +1019,63 @@
 </head>
 <body>
 
+<!-- ── Password gate ── -->
+<div id="gate" style="
+  position:fixed;inset:0;z-index:9999;
+  background:#2e2e2e;
+  display:flex;align-items:center;justify-content:center;
+  font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;
+  -webkit-font-smoothing:antialiased;
+">
+  <div style="
+    background:#1e1e1e;border-radius:20px;
+    padding:40px 36px;width:300px;
+    box-shadow:0 24px 80px rgba(0,0,0,0.5);
+    text-align:center;
+  ">
+    <div style="font-size:32px;margin-bottom:12px;">🔒</div>
+    <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:4px;">Skills Wallet</div>
+    <div style="font-size:13px;color:#9ca3af;margin-bottom:24px;">Enter password to view prototype</div>
+    <input id="gate-input" type="password" placeholder="Password"
+      onkeydown="if(event.key==='Enter')gateCheck()"
+      style="
+        width:100%;box-sizing:border-box;
+        background:#2a2a2a;border:1.5px solid #3a3a3a;border-radius:10px;
+        color:#fff;font-size:15px;padding:11px 14px;
+        outline:none;margin-bottom:12px;
+        font-family:inherit;
+      "
+    >
+    <div id="gate-err" style="font-size:12px;color:#f87171;margin-bottom:10px;min-height:16px;"></div>
+    <button onclick="gateCheck()" style="
+      width:100%;background:#5624d0;color:#fff;
+      border:none;border-radius:10px;font-size:15px;font-weight:700;
+      padding:12px;cursor:pointer;font-family:inherit;
+      transition:background 200ms;
+    "
+      onmouseover="this.style.background='#7c3aed'"
+      onmouseout="this.style.background='#5624d0'"
+    >Enter</button>
+  </div>
+</div>
+<script>
+  function gateCheck() {
+    var v = document.getElementById('gate-input').value;
+    if (v === 'SkillZ') {
+      var g = document.getElementById('gate');
+      g.style.transition = 'opacity 400ms';
+      g.style.opacity = '0';
+      setTimeout(function(){ g.style.display = 'none'; }, 420);
+    } else {
+      var err = document.getElementById('gate-err');
+      err.textContent = 'Incorrect password — try again';
+      document.getElementById('gate-input').value = '';
+      document.getElementById('gate-input').focus();
+    }
+  }
+  document.getElementById('gate-input').focus();
+</script>
+
 <div class="phone" id="phone">
   <div class="island"></div>
 
