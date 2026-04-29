@@ -130,7 +130,7 @@
     .phone {
       width: 390px;
       height: 844px;
-      background: var(--ui-bg);
+      background: #ffffff; /* light mode: white so status bar matches home screen */
       border-radius: 52px;
       box-shadow:
         0 0 0 1px rgba(0,0,0,0.12),
@@ -142,6 +142,10 @@
       position: relative;
       transition: background var(--dur) var(--ease);
     }
+
+    [data-theme="dark"] .phone { background: var(--ui-bg); }
+    /* Progress screen keeps its own grey background in both modes */
+    #screen { background: var(--ui-bg); }
 
     /* Dynamic island */
     .island {
