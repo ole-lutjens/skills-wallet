@@ -1024,10 +1024,10 @@
       flex-direction: column;
       position: relative;
       overflow: hidden;
-      background: var(--ui-bg);
+      background: #ffffff; /* light mode: clean white */
     }
     [data-theme="dark"] .home-screen {
-      background: #0e0e16;
+      background: #0e0e16; /* dark mode: deep for starfield */
     }
     #stars {
       position: absolute;
@@ -1088,9 +1088,10 @@
     }
     .home-sub {
       font-size: 13px;
-      color: var(--ui-text-secondary);
+      color: #49505a; /* AA on white: 7.2:1 */
       margin-bottom: 12px;
     }
+    [data-theme="dark"] .home-sub { color: rgba(255,255,255,0.55); }
     .home-divider {
       height: 1px;
       background: var(--ui-border);
@@ -1116,8 +1117,9 @@
     .home-streak-label {
       font-size: 13px;
       font-weight: 600;
-      color: var(--ui-text-secondary);
+      color: #49505a;
     }
+    [data-theme="dark"] .home-streak-label { color: rgba(255,255,255,0.55); }
     .home-ring-wrap {
       display: flex;
       align-items: center;
@@ -1135,8 +1137,9 @@
       gap: 6px;
       font-size: 12px;
       font-weight: 600;
-      color: rgba(255,255,255,0.7);
+      color: #49505a;
     }
+    [data-theme="dark"] .ring-legend-item { color: rgba(255,255,255,0.7); }
     .ring-dot {
       width: 8px;
       height: 8px;
@@ -1289,7 +1292,7 @@
       var g = document.getElementById('gate');
       g.style.transition = 'opacity 400ms';
       g.style.opacity = '0';
-      setTimeout(function(){ g.style.display = 'none'; }, 420);
+      setTimeout(function(){ g.style.display = 'none'; animateRing(); }, 420);
     } else {
       var err = document.getElementById('gate-err');
       err.textContent = 'Incorrect password — try again';
@@ -1914,6 +1917,10 @@ function toggleTheme() {
   var iconClass = dark ? 'ph-fill ph-sun' : 'ph ph-moon';
   document.getElementById('themeIcon').className = iconClass;
   document.getElementById('homeThemeIcon').className = iconClass;
+  /* redraw ring with correct track colour for new theme */
+  if (document.getElementById('homeScreen').style.display !== 'none') {
+    animateRing();
+  }
 }
 
 /* ================================================================
@@ -1948,6 +1955,7 @@ function setNav(el, tab) {
   hdr.style.display    = 'none';
   if (tab === 'home') {
     home.style.display = 'flex';
+    requestAnimationFrame(animateRing);
   } else if (tab === 'browse') {
     browse.style.display = 'flex';
   } else if (tab === 'progress') {
@@ -2001,14 +2009,15 @@ function pulse(el) {
   draw();
 })();
 
-/* ── Progress ring (animated) ── */
-(function() {
+/* ── Progress ring (triggered on demand) ── */
+function animateRing() {
   var canvas = document.getElementById('ring');
   if (!canvas) return;
   var ctx = canvas.getContext('2d');
   var cx = 36, cy = 36;
   var dur = 1100, start = null;
   var targetVisit = 1.0, targetMin = 20/30;
+  var trackColor = dark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)';
 
   function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
 
@@ -2016,14 +2025,14 @@ function pulse(el) {
     ctx.clearRect(0, 0, 72, 72);
     /* outer track */
     ctx.beginPath(); ctx.arc(cx,cy,27,0,Math.PI*2);
-    ctx.strokeStyle='rgba(255,255,255,0.12)'; ctx.lineWidth=6; ctx.stroke();
+    ctx.strokeStyle = trackColor; ctx.lineWidth=6; ctx.stroke();
     /* outer fill */
     ctx.beginPath();
     ctx.arc(cx, cy, 27, -Math.PI/2, -Math.PI/2 + Math.PI*2*(targetVisit*p));
     ctx.strokeStyle='#f59e0b'; ctx.lineWidth=6; ctx.lineCap='round'; ctx.stroke();
     /* inner track */
     ctx.beginPath(); ctx.arc(cx,cy,18,0,Math.PI*2);
-    ctx.strokeStyle='rgba(255,255,255,0.12)'; ctx.lineWidth=5; ctx.stroke();
+    ctx.strokeStyle = trackColor; ctx.lineWidth=5; ctx.stroke();
     /* inner fill */
     ctx.beginPath();
     ctx.arc(cx, cy, 18, -Math.PI/2, -Math.PI/2 + Math.PI*2*(targetMin*p));
@@ -2037,7 +2046,7 @@ function pulse(el) {
     if (p < 1) requestAnimationFrame(animate);
   }
   requestAnimationFrame(animate);
-})();
+}
 </script>
 </body>
 </html>
