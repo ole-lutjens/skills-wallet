@@ -1078,14 +1078,13 @@
       font-weight: 700;
       color: var(--ui-text-primary);
       line-height: 1.15;
+      margin-bottom: 6px;
     }
     [data-theme="dark"] .home-hello { color: #ffffff; }
     .home-name {
       font-size: 30px;
       font-weight: 700;
       color: var(--ui-accent);
-      line-height: 1.15;
-      margin-bottom: 6px;
     }
     .home-sub {
       font-size: 13px;
@@ -1327,8 +1326,7 @@
         </button>
       </div>
       <!-- Greeting -->
-      <div class="home-hello">Hello,</div>
-      <div class="home-name">Ole!</div>
+      <div class="home-hello">Hello, <span class="home-name">Ole!</span></div>
       <div class="home-sub">You're 60% of the way to your weekly goal!</div>
       <div class="home-divider"></div>
       <!-- Stats row -->
@@ -1788,6 +1786,10 @@ function toggle(id) {
   if (!isOpen) {
     row.classList.add('open');
     renderLOs(id);
+    /* animate sub-skill bars after accordion starts opening */
+    setTimeout(function() {
+      animateBars('#lo-' + id + ' .lo-bar-fill');
+    }, 60);
     /* scroll into view after transition */
     setTimeout(function() {
       var hd = row.querySelector('.skill-row-hd');
@@ -1917,6 +1919,22 @@ function toggleTheme() {
 /* ================================================================
    NAV + MISC
    ================================================================ */
+function animateBars(selector) {
+  var fills = document.querySelectorAll(selector);
+  fills.forEach(function(el) {
+    var target = el.getAttribute('data-target') || el.style.width;
+    el.setAttribute('data-target', target);
+    el.style.transition = 'none';
+    el.style.width = '0';
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        el.style.transition = 'width 0.85s cubic-bezier(0.4,0,0.2,1)';
+        el.style.width = target;
+      });
+    });
+  });
+}
+
 function setNav(el, tab) {
   document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
   el.classList.add('active');
@@ -1935,6 +1953,10 @@ function setNav(el, tab) {
   } else if (tab === 'progress') {
     prog.style.display = 'flex';
     hdr.style.display  = 'flex';
+    /* animate skill-level bars each time Progress is shown */
+    requestAnimationFrame(function() {
+      animateBars('#screen .skill-fill, #screen .card-bar-fill');
+    });
   } else {
     home.style.display = 'flex';
   }
@@ -1979,27 +2001,42 @@ function pulse(el) {
   draw();
 })();
 
-/* ── Progress ring ── */
+/* ── Progress ring (animated) ── */
 (function() {
   var canvas = document.getElementById('ring');
+  if (!canvas) return;
   var ctx = canvas.getContext('2d');
   var cx = 36, cy = 36;
-  function arc(r, lw, color, pct, dash) {
+  var dur = 1100, start = null;
+  var targetVisit = 1.0, targetMin = 20/30;
+
+  function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+
+  function drawRing(p) {
+    ctx.clearRect(0, 0, 72, 72);
+    /* outer track */
+    ctx.beginPath(); ctx.arc(cx,cy,27,0,Math.PI*2);
+    ctx.strokeStyle='rgba(255,255,255,0.12)'; ctx.lineWidth=6; ctx.stroke();
+    /* outer fill */
     ctx.beginPath();
-    ctx.arc(cx, cy, r, -Math.PI/2, -Math.PI/2 + Math.PI*2*pct);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = lw;
-    ctx.lineCap = 'round';
-    ctx.stroke();
+    ctx.arc(cx, cy, 27, -Math.PI/2, -Math.PI/2 + Math.PI*2*(targetVisit*p));
+    ctx.strokeStyle='#f59e0b'; ctx.lineWidth=6; ctx.lineCap='round'; ctx.stroke();
+    /* inner track */
+    ctx.beginPath(); ctx.arc(cx,cy,18,0,Math.PI*2);
+    ctx.strokeStyle='rgba(255,255,255,0.12)'; ctx.lineWidth=5; ctx.stroke();
+    /* inner fill */
+    ctx.beginPath();
+    ctx.arc(cx, cy, 18, -Math.PI/2, -Math.PI/2 + Math.PI*2*(targetMin*p));
+    ctx.strokeStyle='#10b981'; ctx.lineWidth=5; ctx.lineCap='round'; ctx.stroke();
   }
-  /* outer track */
-  ctx.beginPath(); ctx.arc(cx,cy,27,0,Math.PI*2);
-  ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=6; ctx.stroke();
-  arc(27, 6, '#f59e0b', 1.0);        /* visits  1/1 = 100% */
-  /* inner track */
-  ctx.beginPath(); ctx.arc(cx,cy,18,0,Math.PI*2);
-  ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=5; ctx.stroke();
-  arc(18, 5, '#10b981', 20/30);      /* minutes 20/30 = 67% */
+
+  function animate(ts) {
+    if (!start) start = ts;
+    var p = ease(Math.min((ts - start) / dur, 1));
+    drawRing(p);
+    if (p < 1) requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
 })();
 </script>
 </body>
