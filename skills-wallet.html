@@ -1024,6 +1024,9 @@
       flex-direction: column;
       position: relative;
       overflow: hidden;
+      background: var(--ui-bg);
+    }
+    [data-theme="dark"] .home-screen {
       background: #0e0e16;
     }
     #stars {
@@ -1042,35 +1045,56 @@
       padding: 14px 20px 10px;
       overflow: hidden;
     }
+    /* Home top row: avatar left, theme toggle right */
+    .home-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
     .home-top-avatar {
       width: 44px;
       height: 44px;
       border-radius: 50%;
       object-fit: cover;
-      border: 2px solid rgba(255,255,255,0.15);
-      margin-bottom: 12px;
+      border: 2px solid var(--ui-border);
+    }
+    .home-theme-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid var(--ui-border);
+      background: var(--ui-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 18px;
+      color: var(--ui-text-secondary);
+      transition: background var(--dur) var(--ease);
     }
     .home-hello {
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 700;
-      color: #ffffff;
+      color: var(--ui-text-primary);
       line-height: 1.15;
     }
+    [data-theme="dark"] .home-hello { color: #ffffff; }
     .home-name {
-      font-size: 28px;
+      font-size: 30px;
       font-weight: 700;
       color: var(--ui-accent);
       line-height: 1.15;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     .home-sub {
       font-size: 13px;
-      color: rgba(255,255,255,0.45);
+      color: var(--ui-text-secondary);
       margin-bottom: 12px;
     }
     .home-divider {
       height: 1px;
-      background: rgba(255,255,255,0.08);
+      background: var(--ui-border);
       margin-bottom: 14px;
     }
     .home-stats-row {
@@ -1093,7 +1117,7 @@
     .home-streak-label {
       font-size: 13px;
       font-weight: 600;
-      color: rgba(255,255,255,0.55);
+      color: var(--ui-text-secondary);
     }
     .home-ring-wrap {
       display: flex;
@@ -1291,11 +1315,46 @@
   </div>
 
   <!-- ── Home screen ── -->
-  <!-- ── Home screen (placeholder) ── -->
-  <div id="homeScreen" style="flex:1;display:none;align-items:center;justify-content:center;background:var(--ui-bg);">
-    <div style="text-align:center;color:var(--ui-text-secondary);">
-      <i class="ph ph-house" style="font-size:48px;display:block;margin-bottom:10px;"></i>
-      <span style="font-size:13px;font-weight:600;">Coming soon</span>
+  <!-- ── Home screen ── -->
+  <div class="home-screen" id="homeScreen">
+    <canvas id="stars"></canvas>
+    <div class="home-content">
+      <!-- Top row: avatar + theme toggle -->
+      <div class="home-top-row">
+        <img src="images/Ole.png" class="home-top-avatar" alt="Ole">
+        <button class="home-theme-btn" onclick="toggleTheme()">
+          <i class="ph ph-moon" id="homeThemeIcon"></i>
+        </button>
+      </div>
+      <!-- Greeting -->
+      <div class="home-hello">Hello,</div>
+      <div class="home-name">Ole!</div>
+      <div class="home-sub">You're 60% of the way to your weekly goal!</div>
+      <div class="home-divider"></div>
+      <!-- Stats row -->
+      <div class="home-stats-row">
+        <div class="home-streak">
+          <i class="ph-fill ph-fire home-streak-icon"></i>
+          <span class="home-streak-label">2 weeks</span>
+        </div>
+        <div class="home-ring-wrap">
+          <canvas id="ring" width="72" height="72"></canvas>
+          <div class="ring-legend">
+            <div class="ring-legend-item"><span class="ring-dot orange"></span>1/1 visit</div>
+            <div class="ring-legend-item"><span class="ring-dot green"></span>20/30 min</div>
+          </div>
+        </div>
+      </div>
+      <!-- Resume card -->
+      <div class="resume-card">
+        <img class="resume-thumb" src="images/course%20thumbnails/image-32.png" alt="">
+        <div class="resume-overlay">
+          <div class="resume-label"><span class="resume-label-dot"></span>Resume learning</div>
+          <div class="resume-title">Figma: Advanced Variables & Tokens</div>
+          <div class="resume-sub">Lecture 3 — Component tokens in practice</div>
+          <button class="resume-btn"><i class="ph-fill ph-play-circle"></i> Continue</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1308,7 +1367,7 @@
   </div>
 
   <!-- App header (Progress screen only) -->
-  <div class="app-header" id="appHeader" style="display:flex">
+  <div class="app-header" id="appHeader" style="display:none">
     <div class="header-btn" id="backBtn" onclick="pulse(this)">
       <i class="ph-bold ph-caret-left"></i>
     </div>
@@ -1320,7 +1379,7 @@
   </div>
 
   <!-- Scrollable screen (Progress) -->
-  <div class="screen" id="screen" style="display:flex">
+  <div class="screen" id="screen" style="display:none">
 
     <!-- Wallet stats -->
     <div class="stats-strip">
@@ -1545,8 +1604,8 @@
 
   <!-- Bottom nav -->
   <div class="bottom-nav">
-    <div class="nav-item" onclick="setNav(this,'home')">
-      <i class="ph ph-house"></i>
+    <div class="nav-item active" onclick="setNav(this,'home')">
+      <i class="ph-fill ph-house"></i>
       <span class="nav-label">Home</span>
       <div class="nav-pip"></div>
     </div>
@@ -1555,8 +1614,8 @@
       <span class="nav-label">Browse</span>
       <div class="nav-pip"></div>
     </div>
-    <div class="nav-item active" onclick="setNav(this,'progress')">
-      <i class="ph-fill ph-chart-line-up"></i>
+    <div class="nav-item" onclick="setNav(this,'progress')">
+      <i class="ph ph-chart-line-up"></i>
       <span class="nav-label">Progress</span>
       <div class="nav-pip"></div>
     </div>
@@ -1850,7 +1909,9 @@ var dark = false;
 function toggleTheme() {
   dark = !dark;
   document.getElementById('phone').setAttribute('data-theme', dark ? 'dark' : '');
-  document.getElementById('themeIcon').className = dark ? 'ph-fill ph-sun' : 'ph ph-moon';
+  var iconClass = dark ? 'ph-fill ph-sun' : 'ph ph-moon';
+  document.getElementById('themeIcon').className = iconClass;
+  document.getElementById('homeThemeIcon').className = iconClass;
 }
 
 /* ================================================================
