@@ -143,9 +143,9 @@
       transition: background var(--dur) var(--ease);
     }
 
-    [data-theme="dark"] .phone { background: var(--ui-bg); }
-    /* Progress screen keeps its own grey background in both modes */
-    #screen { background: var(--ui-bg); }
+    .phone[data-theme="dark"] { background: var(--ui-bg); }
+    /* Progress screen and its header share the same background */
+    #screen, .app-header { background: var(--ui-bg); }
 
     /* Dynamic island */
     .island {
