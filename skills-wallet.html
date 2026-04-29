@@ -1015,6 +1015,208 @@
 
     .course-actions { display: flex; gap: 7px; }
 
+    /* ============================================================
+       Home screen
+       ============================================================ */
+    .home-screen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+      background: #0e0e16;
+    }
+    #stars {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .home-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      padding: 20px 20px 16px;
+      overflow-y: auto;
+      scrollbar-width: none;
+    }
+    .home-content::-webkit-scrollbar { display: none; }
+    .home-top-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.15);
+      margin-bottom: 20px;
+    }
+    .home-hello {
+      font-size: 28px;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.15;
+    }
+    .home-name {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--ui-accent);
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+    .home-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.45);
+      margin-bottom: 18px;
+    }
+    .home-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.08);
+      margin-bottom: 22px;
+    }
+    .home-stats-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .home-streak {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+    .home-streak-icon {
+      font-size: 34px;
+      color: #a435f0;
+      line-height: 1;
+    }
+    .home-streak-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.55);
+    }
+    .home-ring-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    #ring { display: block; }
+    .ring-legend {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .ring-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.7);
+    }
+    .ring-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .ring-dot.orange { background: #f59e0b; }
+    .ring-dot.green  { background: #10b981; }
+
+    /* Resume card */
+    .resume-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      flex: 1;
+      min-height: 240px;
+      cursor: pointer;
+    }
+    .resume-thumb {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .resume-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom,
+        rgba(0,0,0,0.1) 0%,
+        rgba(0,0,0,0.55) 40%,
+        rgba(0,0,0,0.92) 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+    }
+    .resume-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+    .resume-label-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      flex-shrink: 0;
+    }
+    .resume-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+    .resume-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 16px;
+    }
+    .resume-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: #ffffff;
+      color: #111;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 13px;
+      width: 100%;
+      cursor: pointer;
+      font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .resume-btn:active { opacity: 0.85; }
+
+    /* Nav avatar */
+    .nav-avatar-img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--ui-accent);
+    }
+    /* Nav browse thumbnail */
+    .nav-browse-img {
+      width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      object-fit: cover;
+      object-position: top;
+      border: 1.5px solid var(--ui-border);
+    }
+
   </style>
 </head>
 <body>
@@ -1089,8 +1291,47 @@
     </div>
   </div>
 
-  <!-- App header -->
-  <div class="app-header">
+  <!-- ── Home screen ── -->
+  <div class="home-screen" id="homeScreen">
+    <canvas id="stars"></canvas>
+    <div class="home-content">
+      <img src="images/Ole.png" class="home-top-avatar" alt="Ole">
+      <div class="home-hello">Good Morning,</div>
+      <div class="home-name">Ole</div>
+      <div class="home-sub">You're 60% of the way to your weekly goal!</div>
+      <div class="home-divider"></div>
+      <div class="home-stats-row">
+        <div class="home-streak">
+          <i class="ph-fill ph-fire home-streak-icon"></i>
+          <span class="home-streak-label">2 weeks</span>
+        </div>
+        <div class="home-ring-wrap">
+          <canvas id="ring" width="72" height="72"></canvas>
+          <div class="ring-legend">
+            <div class="ring-legend-item"><span class="ring-dot orange"></span>1/1 visit</div>
+            <div class="ring-legend-item"><span class="ring-dot green"></span>20/30 min</div>
+          </div>
+        </div>
+      </div>
+      <div class="resume-card">
+        <img class="resume-thumb" src="images/course%20thumbnails/image-32.png" alt="">
+        <div class="resume-overlay">
+          <div class="resume-label"><span class="resume-label-dot"></span>Resume learning</div>
+          <div class="resume-title">Figma: Advanced Variables & Tokens</div>
+          <div class="resume-sub">Lecture 3 — Component tokens in practice</div>
+          <button class="resume-btn"><i class="ph-fill ph-play-circle"></i> Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Browse screen ── -->
+  <div id="browseScreen" style="flex:1;display:none;overflow:hidden;">
+    <img src="images/Results.png" style="width:100%;height:100%;object-fit:cover;object-position:top;" alt="Browse">
+  </div>
+
+  <!-- App header (Progress screen only) -->
+  <div class="app-header" id="appHeader" style="display:none">
     <div class="header-btn" id="backBtn" onclick="pulse(this)">
       <i class="ph-bold ph-caret-left"></i>
     </div>
@@ -1101,8 +1342,8 @@
     <div class="header-avatar">OL</div>
   </div>
 
-  <!-- Scrollable screen -->
-  <div class="screen" id="screen">
+  <!-- Scrollable screen (Progress) -->
+  <div class="screen" id="screen" style="display:none">
 
     <!-- Wallet stats -->
     <div class="stats-strip">
@@ -1327,28 +1568,23 @@
 
   <!-- Bottom nav -->
   <div class="bottom-nav">
-    <div class="nav-item" onclick="setNav(this)">
-      <i class="ph ph-house"></i>
+    <div class="nav-item active" onclick="setNav(this,'home')">
+      <i class="ph-fill ph-house"></i>
       <span class="nav-label">Home</span>
       <div class="nav-pip"></div>
     </div>
-    <div class="nav-item" onclick="setNav(this)">
-      <i class="ph ph-play-circle"></i>
-      <span class="nav-label">Learn</span>
+    <div class="nav-item" onclick="setNav(this,'browse')">
+      <i class="ph ph-compass"></i>
+      <span class="nav-label">Browse</span>
       <div class="nav-pip"></div>
     </div>
-    <div class="nav-item active" onclick="setNav(this)">
-      <i class="ph-fill ph-chart-line-up"></i>
+    <div class="nav-item" onclick="setNav(this,'progress')">
+      <i class="ph ph-chart-line-up"></i>
       <span class="nav-label">Progress</span>
       <div class="nav-pip"></div>
     </div>
-    <div class="nav-item" onclick="setNav(this)">
-      <i class="ph ph-certificate"></i>
-      <span class="nav-label">Wallet</span>
-      <div class="nav-pip"></div>
-    </div>
-    <div class="nav-item" onclick="setNav(this)">
-      <i class="ph ph-user-circle"></i>
+    <div class="nav-item" onclick="setNav(this,'other')">
+      <img src="images/Ole.png" class="nav-avatar-img" alt="Ole">
       <span class="nav-label">Profile</span>
       <div class="nav-pip"></div>
     </div>
@@ -1643,15 +1879,90 @@ function toggleTheme() {
 /* ================================================================
    NAV + MISC
    ================================================================ */
-function setNav(el) {
+function setNav(el, tab) {
   document.querySelectorAll('.nav-item').forEach(function(n){ n.classList.remove('active'); });
   el.classList.add('active');
+  var home   = document.getElementById('homeScreen');
+  var browse = document.getElementById('browseScreen');
+  var prog   = document.getElementById('screen');
+  var hdr    = document.getElementById('appHeader');
+  home.style.display   = 'none';
+  browse.style.display = 'none';
+  prog.style.display   = 'none';
+  hdr.style.display    = 'none';
+  if (tab === 'home') {
+    home.style.display = 'flex';
+  } else if (tab === 'browse') {
+    browse.style.display = 'flex';
+  } else if (tab === 'progress') {
+    prog.style.display = 'flex';
+    hdr.style.display  = 'flex';
+  } else {
+    home.style.display = 'flex';
+  }
 }
 
 function pulse(el) {
   el.style.transform = 'scale(0.88)';
   setTimeout(function(){ el.style.transform = ''; }, 140);
 }
+
+/* ── Starfield ── */
+(function() {
+  var canvas = document.getElementById('stars');
+  function resize() {
+    canvas.width  = canvas.offsetWidth;
+    canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  var ctx = canvas.getContext('2d');
+  var stars = [];
+  for (var i = 0; i < 160; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 1.2 + 0.2,
+      a: Math.random() * 0.6 + 0.2,
+      s: (Math.random() * 0.004 + 0.001) * (Math.random() < 0.5 ? 1 : -1)
+    });
+  }
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(function(s) {
+      s.a += s.s;
+      if (s.a > 0.85 || s.a < 0.1) s.s = -s.s;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,' + s.a.toFixed(2) + ')';
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── Progress ring ── */
+(function() {
+  var canvas = document.getElementById('ring');
+  var ctx = canvas.getContext('2d');
+  var cx = 36, cy = 36;
+  function arc(r, lw, color, pct, dash) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, -Math.PI/2, -Math.PI/2 + Math.PI*2*pct);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = lw;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+  }
+  /* outer track */
+  ctx.beginPath(); ctx.arc(cx,cy,27,0,Math.PI*2);
+  ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=6; ctx.stroke();
+  arc(27, 6, '#f59e0b', 1.0);        /* visits  1/1 = 100% */
+  /* inner track */
+  ctx.beginPath(); ctx.arc(cx,cy,18,0,Math.PI*2);
+  ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=5; ctx.stroke();
+  arc(18, 5, '#10b981', 20/30);      /* minutes 20/30 = 67% */
+})();
 </script>
 </body>
 </html>
