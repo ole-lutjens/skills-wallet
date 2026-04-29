@@ -14,7 +14,7 @@
        Widget DS — CSS Custom Properties (light mode)
        ============================================================ */
     :root {
-      --ui-bg:             #d6d6d9;
+      --ui-bg:             #f2f3f5;
       --ui-bg-raised:      #ffffff;
       --ui-surface:        #ffffff;
       --ui-surface-2:      #f7f8fa;
@@ -130,7 +130,7 @@
     .phone {
       width: 390px;
       height: 844px;
-      background: #ffffff; /* light mode: white so status bar matches home screen */
+      background: var(--ui-bg); /* matches progress screen; JS overrides for home */
       border-radius: 52px;
       box-shadow:
         0 0 0 1px rgba(0,0,0,0.12),
@@ -143,8 +143,7 @@
       transition: background var(--dur) var(--ease);
     }
 
-    .phone[data-theme="dark"] { background: var(--ui-bg); }
-    /* Progress screen and its header share the same background */
+    /* Progress screen and its header share the same background as the phone */
     #screen, .app-header { background: var(--ui-bg); }
 
     /* Dynamic island */
@@ -1030,7 +1029,7 @@
       overflow: hidden;
       background: #ffffff; /* light mode: clean white */
     }
-    [data-theme="dark"] .home-screen {
+    .phone[data-theme="dark"] .home-screen {
       background: #0e0e16; /* dark mode: deep for starfield */
     }
     #stars {
@@ -1296,7 +1295,12 @@
       var g = document.getElementById('gate');
       g.style.transition = 'opacity 400ms';
       g.style.opacity = '0';
-      setTimeout(function(){ g.style.display = 'none'; animateRing(); }, 420);
+      setTimeout(function(){
+        g.style.display = 'none';
+        /* home is the default screen — set phone bg to match */
+        document.getElementById('phone').style.background = dark ? '#0e0e16' : '#ffffff';
+        animateRing();
+      }, 420);
     } else {
       var err = document.getElementById('gate-err');
       err.textContent = 'Incorrect password — try again';
@@ -1917,12 +1921,14 @@ function saveCourse(btn) {
 var dark = false;
 function toggleTheme() {
   dark = !dark;
-  document.getElementById('phone').setAttribute('data-theme', dark ? 'dark' : '');
+  var phone = document.getElementById('phone');
+  phone.setAttribute('data-theme', dark ? 'dark' : '');
   var iconClass = dark ? 'ph-fill ph-sun' : 'ph ph-moon';
   document.getElementById('themeIcon').className = iconClass;
   document.getElementById('homeThemeIcon').className = iconClass;
-  /* redraw ring with correct track colour for new theme */
+  /* keep phone bg in sync when on home */
   if (document.getElementById('homeScreen').style.display !== 'none') {
+    phone.style.background = dark ? '#0e0e16' : '#ffffff';
     animateRing();
   }
 }
@@ -1953,24 +1959,30 @@ function setNav(el, tab) {
   var browse = document.getElementById('browseScreen');
   var prog   = document.getElementById('screen');
   var hdr    = document.getElementById('appHeader');
+  var phone  = document.getElementById('phone');
   home.style.display   = 'none';
   browse.style.display = 'none';
   prog.style.display   = 'none';
   hdr.style.display    = 'none';
   if (tab === 'home') {
     home.style.display = 'flex';
+    /* status bar matches home screen colour */
+    phone.style.background = dark ? '#0e0e16' : '#ffffff';
     requestAnimationFrame(animateRing);
   } else if (tab === 'browse') {
     browse.style.display = 'flex';
+    phone.style.background = ''; /* CSS var(--ui-bg) */
   } else if (tab === 'progress') {
     prog.style.display = 'flex';
     hdr.style.display  = 'flex';
+    phone.style.background = ''; /* CSS var(--ui-bg) */
     /* animate skill-level bars each time Progress is shown */
     requestAnimationFrame(function() {
       animateBars('#screen .skill-fill, #screen .card-bar-fill');
     });
   } else {
     home.style.display = 'flex';
+    phone.style.background = dark ? '#0e0e16' : '#ffffff';
   }
 }
 
